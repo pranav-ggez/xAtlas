@@ -1,4 +1,4 @@
-# 🌍 XATLAS: Global Threat Monitor & OSINT Platform
+# XATLAS: Global Threat Monitor & OSINT Platform
 
 > **Real-time cybersecurity situational awareness dashboard visualizing global threats, simulating live attack vectors, and providing actionable Open Source Intelligence (OSINT) tools.**
 
