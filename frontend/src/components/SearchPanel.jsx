@@ -16,7 +16,7 @@ export default function SearchPanel({ onSelectTool }) {
     setExcuse(null);
 
     try {
-      const apiUrl = `/api/tools/search?query=${encodeURIComponent(searchTerm)}`;
+      const apiUrl = `https://xatlas-api.onrender.com/api/tools/search?query=${encodeURIComponent(searchTerm)}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       
