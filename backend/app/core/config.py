@@ -1,11 +1,10 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 
 class Settings(BaseSettings):
-    CORS_ORIGINS: List[str] = ["*"]
+    model_config = SettingsConfigDict(extra="ignore")
     
-    class Config:
-        env_file = ".env"
+    CORS_ORIGINS: List[str] = ["*"]
 
 def get_settings():
     return Settings()
