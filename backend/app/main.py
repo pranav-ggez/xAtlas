@@ -11,10 +11,9 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="xAtlas Security Platform")
 
-#allow ALL domains temporarily
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # <--- CHANGE THIS TO ["*"]
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
