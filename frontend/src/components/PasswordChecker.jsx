@@ -17,7 +17,7 @@ export default function PasswordChecker() {
     setError(null);
 
     try {
-      const res = await fetch('/api/security/check-leak', {
+      const res = await fetch('https://xatlas-api.onrender.com/api/security/check-leak', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password })

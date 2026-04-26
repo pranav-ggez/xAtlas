@@ -1,15 +1,11 @@
-from pydantic_settings import BaseSettings
-from functools import lru_cache
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import List
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "sqlite:///./xatlas.db"
-    SECRET_KEY: str = "change_this_in_production"
-    CORS_ORIGINS: list = ["http://localhost:5173"]
+    model_config = SettingsConfigDict(extra="ignore")
     
-    class Config:
-        env_file = ".env"
+    CORS_ORIGINS: List[str] = ["*"]
 
-@lru_cache()
 def get_settings():
     return Settings()
 
