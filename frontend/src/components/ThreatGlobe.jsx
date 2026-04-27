@@ -32,7 +32,7 @@ const CITIES = [
   { name: "South Korea", lat: 37.5665, lng: 126.9780 },
   { name: "Indonesia", lat: -6.2088, lng: 106.8456 },
   { name: "Ukraine", lat: 50.4501, lng: 30.5234 },
-  { name: "Pakistan", lat: 33.6844, lng: 73.0479 },
+  { name: "India", lat: 33.6844, lng: 73.0479 },
   { name: "Nigeria", lat: 6.5244, lng: 3.3792 },
   { name: "Egypt", lat: 30.0444, lng: 31.2357 },
   { name: "Argentina", lat: -34.6037, lng: -58.3816 },
@@ -46,7 +46,6 @@ const CITIES = [
   { name: "Kenya", lat: -1.2921, lng: 36.8219 }
 ];
 
-// Proper global tech hubs — no more Suffolk villages
 const TECH_HUBS = [
   { name: "San Francisco", lat: 37.7749, lng: -122.4194 },
   { name: "Seattle", lat: 47.6062, lng: -122.3321 },
@@ -200,7 +199,6 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
   const [arcs, setArcs] = useState([]);
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
-  // Responsive sizing
   useEffect(() => {
     const handleResize = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
@@ -209,20 +207,17 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Auto-rotate on mount
   useEffect(() => {
     if (globeEl.current) {
       globeEl.current.controls().autoRotate = true;
       globeEl.current.controls().autoRotateSpeed = 0.4;
       globeEl.current.controls().enableDamping = true;
       globeEl.current.controls().dampingFactor = 0.1;
-      globeEl.current.pointOfView({ lat: 20, lng: 10, altitude: 1.8 }, 0);
+      globeEl.current.pointOfView({ lat: 20.5937, lng: 78.9629, altitude: 2.5 }, 0);
     }
   }, []);
 
-  // Generate static data once
   useEffect(() => {
-    // Historical attacks
     const histAttacks = Array.from({ length: 200 }, () => {
       const target = CITIES[Math.floor(Math.random() * CITIES.length)];
       const severity = Math.random() > 0.7 ? 'Critical' : Math.random() > 0.4 ? 'High' : 'Medium';
@@ -240,7 +235,6 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
     });
     setHistoricalAttacks(histAttacks);
 
-    // Infrastructure nodes
     const infraNodes = Array.from({ length: 100 }, () => {
       const city = CITIES[Math.floor(Math.random() * CITIES.length)];
       return {
@@ -255,7 +249,6 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
     });
     setInfrastructureNodes(infraNodes);
 
-    // Threat hotspots
     const hotspotData = Array.from({ length: 50 }, () => {
       const city = CITIES[Math.floor(Math.random() * CITIES.length)];
       return {
@@ -270,7 +263,6 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
     });
     setHotspots(hotspotData);
 
-    // Secure nodes — real global tech hubs only
     const secureNodeData = Array.from({ length: 84 }, (_, i) => {
       const hub = TECH_HUBS[i % TECH_HUBS.length];
       return {
@@ -287,7 +279,6 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
     setSecureNodes(secureNodeData);
   }, []);
 
-  // Update arcs when live attacks change — show last 15 as animated arcs
   useEffect(() => {
     if (!activeLayers.attacks) {
       setArcs([]);
@@ -308,7 +299,6 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
     setArcs(recentArcs);
   }, [attacks, activeLayers.attacks]);
 
-  // Build point data from active layers
   const pointData = [];
 
   if (activeLayers.attacks) {
@@ -357,19 +347,16 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
         width={dimensions.width}
         height={dimensions.height}
 
-        // Textures
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-        bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
-        backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-        cloudsImageUrl="//unpkg.com/three-globe/example/img/earth-clouds.png"
+        globeImageUrl="https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+        bumpImageUrl="https://unpkg.com/three-globe/example/img/earth-topology.png"
+        backgroundImageUrl="https://unpkg.com/three-globe/example/img/night-sky.png"
+        cloudsImageUrl="https://unpkg.com/three-globe/example/img/earth-clouds.png"
         cloudsOpacity={0.15}
         cloudsSpeed={0.0004}
 
-        // Atmosphere — deeper blue glow
         atmosphereColor="#1a3a6a"
         atmosphereAltitude={0.18}
 
-        // Points
         pointsData={pointData}
         pointColor="color"
         pointAltitude={0.025}
@@ -379,7 +366,6 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
         pointLabel={buildTooltip}
         onPointClick={handlePointClick}
 
-        // Rings on live attacks only
         ringsData={ringData}
         ringColor={d => t => {
           const alpha = Math.max(0, 1 - t);
@@ -393,7 +379,6 @@ export default function ThreatGlobe({ attacks, activeLayers, onPointClick }) {
         ringPropagationSpeed={2}
         ringRepeatPeriod={800}
 
-        // Arcs for live attack trajectories
         arcsData={arcs}
         arcColor="color"
         arcAltitude={0.3}
