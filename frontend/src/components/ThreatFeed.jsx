@@ -12,9 +12,9 @@ export default function ThreatFeed({ attacks }) {
           Monitoring...
         </div>
       ) : (
-        attacks.map((attack) => (
-          <div 
-            key={attack.id} 
+      attacks.map((attack, index) => (
+      <div key={`${attack.id}-${index}`}
+ 
             style={{ 
               background: 'rgba(239, 68, 68, 0.05)', 
               borderLeft: `3px solid ${
@@ -26,14 +26,16 @@ export default function ThreatFeed({ attacks }) {
               marginBottom: '4px',
               transition: 'all 0.2s'
             }}
-            onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(239, 68, 68, 0.1)';
-              e.target.style.transform = 'translateX(2px)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(239, 68, 68, 0.05)';
-              e.target.style.transform = 'translateX(0)';
-            }}
+           onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+          e.currentTarget.style.transform = 'translateX(2px)';
+          }}
+          
+         onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.05)';
+        e.currentTarget.style.transform = 'translateX(0)';
+        }}
+
           >
             <div style={{ 
               display: 'flex', 
