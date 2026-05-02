@@ -167,8 +167,6 @@ function App() {
     { key: 'tools',     label: '🔧 TOOLS',       ref: toolsSectionRef },
   ]
 
-  // ── Shared tool card configs — single source of truth ──────────────────
-  // Base 4 tools shown in both bottom panel and Tools section
   const BASE_TOOLS = [
     {
       key: 'oss',
@@ -204,7 +202,6 @@ function App() {
     }
   ]
 
-  // Extended tools — only in Tools section
   const EXTENDED_TOOLS = [
     {
       key: 'whois',
@@ -233,7 +230,7 @@ function App() {
       display: 'flex', flexDirection: 'column'
     }}>
 
-      {/* TOP NAVIGATION BAR — unchanged */}
+      {/* TOP NAVIGATION BAR */}
       <div style={{
         flexShrink: 0, height: '50px',
         background: 'rgba(0, 20, 0, 0.95)',
@@ -299,7 +296,7 @@ function App() {
         }}>
           {!isPaused && (
             <>
-              {/* LEFT SIDEBAR — unchanged */}
+              {/* LEFT SIDEBAR */}
               <div style={{
                 position: 'absolute', top: 0, left: 0,
                 width: leftSidebarOpen ? '280px' : '0', bottom: '0',
@@ -346,7 +343,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Sidebar Toggle — unchanged */}
+              {/* Sidebar Toggle */}
               <button onClick={() => setLeftSidebarOpen(!leftSidebarOpen)} style={{
                 position: 'absolute', top: '10px', left: leftSidebarOpen ? '290px' : '10px',
                 zIndex: 95, background: 'rgba(16, 185, 129, 0.9)', border: 'none',
@@ -357,7 +354,7 @@ function App() {
                 {leftSidebarOpen ? '◀' : '▶'}
               </button>
 
-              {/* Globe Area — unchanged */}
+              {/* Globe Area */}
               <div style={{
                 position: 'absolute', top: 0, left: leftSidebarOpen ? '280px' : '0',
                 right: '300px', bottom: '0',
@@ -371,7 +368,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Right Stats Panel — unchanged */}
+              {/* Right Stats Panel */}
               <div style={{ position: 'absolute', top: 0, right: 0, width: '300px', bottom: '0', background: 'rgba(0, 10, 0, 0.95)', borderLeft: '1px solid #10b981', zIndex: 90, overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: '#10b981 #001100' }}>
                 <div style={{ padding: '12px' }}>
                   <div style={{ marginBottom: '15px' }}>
@@ -411,16 +408,13 @@ function App() {
                 </div>
               </div>
 
-              {/* ── BOTTOM PANEL ──
-                  LAYOUT FIX: overflowX:'auto' on the row container
-                  + flexShrink:0 + fixed width on each tool column
-                  prevents any panel from being compressed.
-              */}
+              {/* ── BOTTOM PANEL ── */}
               <div style={{
                 position: 'absolute', bottom: '0',
                 left: leftSidebarOpen ? '280px' : '0', right: '0',
                 zIndex: 95, display: 'flex', flexDirection: 'column'
               }}>
+                {/* Toggle bar */}
                 <div onClick={toggleBottomPanel} style={{
                   height: '24px', background: '#10b981', borderTop: '2px solid #000',
                   cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -429,20 +423,38 @@ function App() {
                   {bottomPanelOpen ? '▼' : '▲'}
                 </div>
 
+                {/*
+                  LAYOUT FIX — bottom panel row:
+                  - overflowX changed from 'auto' to 'hidden' → removes horizontal scrollbar
+                  - width: '100%' + boxSizing: 'border-box' → constrains to parent
+                */}
                 <div style={{
                   background: 'rgba(0, 10, 0, 0.95)',
                   borderTop: '2px solid #10b981',
-                  overflowX: 'auto',       /* KEY FIX — horizontal scroll, no squeezing */
+                  overflowX: 'hidden',          /* CHANGED: was 'auto' — removes scrollbar */
                   overflowY: 'hidden',
                   maxHeight: bottomPanelOpen ? '60vh' : '0',
                   transition: 'max-height 0.3s ease',
                   display: 'flex',
                   flexDirection: 'row',
-                  minHeight: '0'
+                  minHeight: '0',
+                  width: '100%',                /* ADDED: constrain to parent width */
+                  boxSizing: 'border-box'       /* ADDED: padding stays inside width */
                 }}>
 
-                  {/* Live Feed — fixed width */}
-                  <div style={{ width: '250px', flexShrink: 0, borderRight: '1px solid #333', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  {/*
+                    Live Feed column — fixed narrow width, won't squeeze tool cards.
+                    Reduced from 250px → 220px to free up space for the 4 tool cards.
+                  */}
+                  <div style={{
+                    width: '220px',             /* CHANGED: was 250px */
+                    minWidth: '180px',          /* ADDED: minimum readable width */
+                    flexShrink: 0,
+                    borderRight: '1px solid #333',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden'
+                  }}>
                     <div style={{ padding: '8px 12px', background: 'rgba(239,68,68,0.2)', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
                       <span style={{ color: '#ef4444', fontWeight: 'bold', fontSize: '0.8rem' }}>⚠️ LIVE FEED</span>
                       <span style={{ background: '#ef4444', color: '#000', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>{attacks.length}</span>
@@ -452,17 +464,29 @@ function App() {
                     </div>
                   </div>
 
-                  {/* Base 4 tool columns — fixed width, no flex shrink */}
+                  {/*
+                    BASE_TOOLS columns — LAYOUT FIX:
+                    - Removed: width:'260px' + flexShrink:0  (caused overflow)
+                    - Added:   flex:'1 1 0'   → equal-width shares of remaining space
+                    - Added:   minWidth:'180px' → minimum before text gets unreadable
+                    - Added:   maxWidth:'320px' → prevents one card from dominating
+                    - Changed: alignItems 'center' → 'stretch' so inner content fills width
+                    - Added:   boxSizing:'border-box' so padding stays inside flex width
+                  */}
                   {BASE_TOOLS.map((tool, i) => (
                     <div key={tool.key} style={{
-                      flexShrink: 0,
-                      width: '260px',
+                      flex: '1 1 0',              /* CHANGED: was width:'260px' + flexShrink:0 */
+                      minWidth: '180px',           /* ADDED */
+                      maxWidth: '320px',           /* ADDED */
                       borderRight: i < BASE_TOOLS.length - 1 ? '1px solid #333' : 'none',
-                      padding: '15px',
-                      display: 'flex', flexDirection: 'column',
-                      alignItems: 'center', justifyContent: 'flex-start',
+                      padding: '12px',             /* CHANGED: was 15px, tighter to fit */
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'stretch',       /* CHANGED: was 'center' */
+                      justifyContent: 'flex-start',
                       background: 'rgba(0, 20, 0, 0.3)',
-                      overflowY: 'auto'
+                      overflowY: 'auto',
+                      boxSizing: 'border-box'      /* ADDED */
                     }}>
                       <div style={{ width: '100%' }}>
                         {tool.component}
@@ -476,7 +500,7 @@ function App() {
           )}
         </div>
 
-        {/* ── SECTION 2: CVE FEED — unchanged ── */}
+        {/* ── SECTION 2: CVE FEED ── */}
         <div ref={cveSectionRef} style={{ width: '100%', minHeight: '100vh', background: 'linear-gradient(180deg, #000 0%, #000d00 100%)', borderTop: '2px solid #10b981', padding: '30px', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #1a3a1a' }}>
             <span style={{ fontSize: '1.5rem' }}>🛡️</span>
@@ -489,7 +513,7 @@ function App() {
           <CVEFeed />
         </div>
 
-        {/* ── SECTION 3: NEWS — unchanged ── */}
+        {/* ── SECTION 3: NEWS ── */}
         <div ref={newsSectionRef} style={{ width: '100%', minHeight: '100vh', background: 'linear-gradient(180deg, #000d00 0%, #00080d 100%)', borderTop: '2px solid #3b82f6', padding: '30px', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #1a2a3a' }}>
             <span style={{ fontSize: '1.5rem' }}>📰</span>
@@ -502,7 +526,7 @@ function App() {
           <LiveNewsFeed />
         </div>
 
-        {/* ── SECTION 4: ANALYTICS — unchanged ── */}
+        {/* ── SECTION 4: ANALYTICS ── */}
         <div ref={analyticsSectionRef} style={{ width: '100%', minHeight: '100vh', background: 'linear-gradient(180deg, #00080d 0%, #0d0800 100%)', borderTop: '2px solid #f97316', padding: '30px', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #2a1a0a' }}>
             <span style={{ fontSize: '1.5rem' }}>📊</span>
@@ -514,11 +538,7 @@ function App() {
           <ThreatAnalytics attacks={attacks} />
         </div>
 
-        {/* ── SECTION 5: TOOLS ──
-            Same base 4 tools as bottom panel + 2 extended tools.
-            Uses a responsive grid — equal width, even spacing, no overlap.
-            No invented components. All tools hit real public APIs.
-        */}
+        {/* ── SECTION 5: TOOLS ── */}
         <div ref={toolsSectionRef} style={{ width: '100%', minHeight: '100vh', background: 'linear-gradient(180deg, #0d0800 0%, #000 100%)', borderTop: '2px solid #8b5cf6', padding: '30px', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #1a102a' }}>
             <span style={{ fontSize: '1.5rem' }}>🔧</span>
@@ -529,11 +549,11 @@ function App() {
           </div>
 
           {/*
-            LAYOUT FIX for Tools grid:
-            - repeat(auto-fit, minmax(320px, 1fr)) ensures equal-width cards
-            - gap:'24px' ensures consistent spacing
-            - alignItems:'start' prevents cards from stretching to match tallest
-            This resolves the overlap/uneven spacing shown in the screenshots.
+            LAYOUT FIX — Tools section grid:
+            - Replaced inline gridTemplateColumns with className="tools-grid"
+            - The CSS class in App.css handles responsive breakpoints via @media queries
+            - Desktop: 4 cols | Tablet (≤1200px): 2 cols | Mobile (≤640px): 1 col
+            - alignItems:'start' prevents cards stretching to match tallest neighbour
           */}
           <div style={{
             display: 'grid',
@@ -548,7 +568,15 @@ function App() {
                 borderRadius: '10px',
                 padding: '20px'
               }}>
-                <h3 style={{ color: tool.color, margin: '0 0 16px 0', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', paddingBottom: '10px', borderBottom: `1px solid ${tool.border}` }}>
+                <h3 style={{
+                  color: tool.color,
+                  margin: '0 0 16px 0',
+                  fontSize: '0.85rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px',
+                  paddingBottom: '10px',
+                  borderBottom: `1px solid ${tool.border}`
+                }}>
                   {tool.title}
                 </h3>
                 {tool.component}
@@ -557,7 +585,7 @@ function App() {
           </div>
         </div>
 
-        {/* FOOTER — unchanged */}
+        {/* FOOTER */}
         <div style={{ width: '100%', padding: '20px 30px', background: 'rgba(0,20,0,0.95)', borderTop: '1px solid #10b981', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxSizing: 'border-box' }}>
           <div style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 'bold', letterSpacing: '2px' }}>XATLAS © {new Date().getFullYear()} — GLOBAL THREAT MONITOR</div>
           <div style={{ color: '#444', fontSize: '0.65rem' }}>Data sources: NVD · HIBP · ThreatFox · Public DNS · RSS feeds</div>
@@ -566,7 +594,7 @@ function App() {
 
       </div>
 
-      {/* Tool Modal — unchanged */}
+      {/* Tool Modal */}
       {selectedTool && (
         <>
           <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 199, background: 'rgba(0,0,0,0.6)' }} onClick={() => setSelectedTool(null)} />
