@@ -11,6 +11,9 @@ import LiveNewsFeed from './components/LiveNewsFeed.jsx'
 import ThreatAnalytics from './components/ThreatAnalytics.jsx'
 import WHOISLookup from './components/WHOISLookup.jsx'
 import IPLookup from './components/IPLookup.jsx'
+import ShodanLookup from './components/ShodanLookup.jsx'
+import SSLInspector from './components/SSLInspector.jsx'
+import EmailHeaderAnalyzer from './components/EmailHeaderAnalyzer.jsx'
 
 function App() {
   const { state } = useGalaxy()
@@ -218,7 +221,32 @@ function App() {
       border: '#0a2a3a',
       bg: 'rgba(6,182,212,0.05)',
       component: <IPLookup />
-    }
+    },
+    // ── NEW TOOLS ──────────────────────────────────────────
+    {
+      key: 'shodan',
+      title: '🔭 Shodan Port Scanner',
+      color: '#f97316',
+      border: '#3a200a',
+      bg: 'rgba(249,115,22,0.05)',
+      component: <ShodanLookup />
+    },
+    {
+      key: 'ssl',
+      title: '🔒 SSL Certificate Inspector',
+      color: '#8b5cf6',
+      border: '#2a1a3a',
+      bg: 'rgba(139,92,246,0.05)',
+      component: <SSLInspector />
+    },
+    {
+      key: 'emailheader',
+      title: '✉️ Email Header Analyzer',
+      color: '#f59e0b',
+      border: '#3a2a0a',
+      bg: 'rgba(245,158,11,0.05)',
+      component: <EmailHeaderAnalyzer />
+    },
   ]
 
   const ALL_TOOLS = [...BASE_TOOLS, ...EXTENDED_TOOLS]
@@ -414,7 +442,6 @@ function App() {
                 left: leftSidebarOpen ? '280px' : '0', right: '0',
                 zIndex: 95, display: 'flex', flexDirection: 'column'
               }}>
-                {/* Toggle bar */}
                 <div onClick={toggleBottomPanel} style={{
                   height: '24px', background: '#10b981', borderTop: '2px solid #000',
                   cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -423,32 +450,23 @@ function App() {
                   {bottomPanelOpen ? '▼' : '▲'}
                 </div>
 
-                {/*
-                  LAYOUT FIX — bottom panel row:
-                  - overflowX changed from 'auto' to 'hidden' → removes horizontal scrollbar
-                  - width: '100%' + boxSizing: 'border-box' → constrains to parent
-                */}
                 <div style={{
                   background: 'rgba(0, 10, 0, 0.95)',
                   borderTop: '2px solid #10b981',
-                  overflowX: 'hidden',          /* CHANGED: was 'auto' — removes scrollbar */
+                  overflowX: 'hidden',
                   overflowY: 'hidden',
                   maxHeight: bottomPanelOpen ? '60vh' : '0',
                   transition: 'max-height 0.3s ease',
                   display: 'flex',
                   flexDirection: 'row',
                   minHeight: '0',
-                  width: '100%',                /* ADDED: constrain to parent width */
-                  boxSizing: 'border-box'       /* ADDED: padding stays inside width */
+                  width: '100%',
+                  boxSizing: 'border-box'
                 }}>
-
-                  {/*
-                    Live Feed column — fixed narrow width, won't squeeze tool cards.
-                    Reduced from 250px → 220px to free up space for the 4 tool cards.
-                  */}
+                  {/* Live Feed */}
                   <div style={{
-                    width: '220px',             /* CHANGED: was 250px */
-                    minWidth: '180px',          /* ADDED: minimum readable width */
+                    width: '220px',
+                    minWidth: '180px',
                     flexShrink: 0,
                     borderRight: '1px solid #333',
                     display: 'flex',
@@ -464,36 +482,27 @@ function App() {
                     </div>
                   </div>
 
-                  {/*
-                    BASE_TOOLS columns — LAYOUT FIX:
-                    - Removed: width:'260px' + flexShrink:0  (caused overflow)
-                    - Added:   flex:'1 1 0'   → equal-width shares of remaining space
-                    - Added:   minWidth:'180px' → minimum before text gets unreadable
-                    - Added:   maxWidth:'320px' → prevents one card from dominating
-                    - Changed: alignItems 'center' → 'stretch' so inner content fills width
-                    - Added:   boxSizing:'border-box' so padding stays inside flex width
-                  */}
+                  {/* Base 4 tool columns */}
                   {BASE_TOOLS.map((tool, i) => (
                     <div key={tool.key} style={{
-                      flex: '1 1 0',              /* CHANGED: was width:'260px' + flexShrink:0 */
-                      minWidth: '180px',           /* ADDED */
-                      maxWidth: '320px',           /* ADDED */
+                      flex: '1 1 0',
+                      minWidth: '180px',
+                      maxWidth: '320px',
                       borderRight: i < BASE_TOOLS.length - 1 ? '1px solid #333' : 'none',
-                      padding: '12px',             /* CHANGED: was 15px, tighter to fit */
+                      padding: '12px',
                       display: 'flex',
                       flexDirection: 'column',
-                      alignItems: 'stretch',       /* CHANGED: was 'center' */
+                      alignItems: 'stretch',
                       justifyContent: 'flex-start',
                       background: 'rgba(0, 20, 0, 0.3)',
                       overflowY: 'auto',
-                      boxSizing: 'border-box'      /* ADDED */
+                      boxSizing: 'border-box'
                     }}>
                       <div style={{ width: '100%' }}>
                         {tool.component}
                       </div>
                     </div>
                   ))}
-
                 </div>
               </div>
             </>
@@ -544,17 +553,12 @@ function App() {
             <span style={{ fontSize: '1.5rem' }}>🔧</span>
             <div>
               <h2 style={{ margin: 0, color: '#8b5cf6', fontSize: '1.1rem', letterSpacing: '2px', textTransform: 'uppercase' }}>OSINT Tool Suite</h2>
-              <p style={{ margin: 0, color: '#666', fontSize: '0.75rem' }}>Security tools, breach checkers, and reconnaissance utilities</p>
+              <p style={{ margin: 0, color: '#666', fontSize: '0.75rem' }}>
+                Security tools, breach checkers, and reconnaissance utilities · {ALL_TOOLS.length} tools
+              </p>
             </div>
           </div>
 
-          {/*
-            LAYOUT FIX — Tools section grid:
-            - Replaced inline gridTemplateColumns with className="tools-grid"
-            - The CSS class in App.css handles responsive breakpoints via @media queries
-            - Desktop: 4 cols | Tablet (≤1200px): 2 cols | Mobile (≤640px): 1 col
-            - alignItems:'start' prevents cards stretching to match tallest neighbour
-          */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
@@ -588,7 +592,7 @@ function App() {
         {/* FOOTER */}
         <div style={{ width: '100%', padding: '20px 30px', background: 'rgba(0,20,0,0.95)', borderTop: '1px solid #10b981', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxSizing: 'border-box' }}>
           <div style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 'bold', letterSpacing: '2px' }}>XATLAS © {new Date().getFullYear()} — GLOBAL THREAT MONITOR</div>
-          <div style={{ color: '#444', fontSize: '0.65rem' }}>Data sources: NVD · HIBP · ThreatFox · Public DNS · RSS feeds</div>
+          <div style={{ color: '#444', fontSize: '0.65rem' }}>Data sources: NVD · HIBP · ThreatFox · Shodan · crt.sh · Public DNS · RSS feeds</div>
           <div style={{ color: '#444', fontSize: '0.65rem' }}>For educational purposes only</div>
         </div>
 
