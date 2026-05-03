@@ -14,6 +14,9 @@ import IPLookup from './components/IPLookup.jsx'
 import ShodanLookup from './components/ShodanLookup.jsx'
 import SSLInspector from './components/SSLInspector.jsx'
 import EmailHeaderAnalyzer from './components/EmailHeaderAnalyzer.jsx'
+import PermissionAnalyzer from './components/PermissionAnalyzer.jsx'
+import DigitalFootprintScanner from './components/DigitalFootprintScanner.jsx'
+import URLSafetyChecker from './components/URLSafetyChecker.jsx'
 
 function App() {
   const { state } = useGalaxy()
@@ -222,7 +225,6 @@ function App() {
       bg: 'rgba(6,182,212,0.05)',
       component: <IPLookup />
     },
-    // ── NEW TOOLS ──────────────────────────────────────────
     {
       key: 'shodan',
       title: '🔭 Shodan Port Scanner',
@@ -246,6 +248,30 @@ function App() {
       border: '#3a2a0a',
       bg: 'rgba(245,158,11,0.05)',
       component: <EmailHeaderAnalyzer />
+    },
+    {
+      key: 'permissions',
+      title: '🔑 Browser Permission Analyzer',
+      color: '#8b5cf6',
+      border: '#2a1a3a',
+      bg: 'rgba(139,92,246,0.05)',
+      component: <PermissionAnalyzer />
+    },
+    {
+      key: 'footprint',
+      title: '👣 Digital Footprint Scanner',
+      color: '#10b981',
+      border: '#1a3a2a',
+      bg: 'rgba(16,185,129,0.05)',
+      component: <DigitalFootprintScanner />
+    },
+    {
+      key: 'urlsafety',
+      title: '🔗 URL Safety Checker',
+      color: '#ef4444',
+      border: '#3a1a1a',
+      bg: 'rgba(239,68,68,0.05)',
+      component: <URLSafetyChecker />
     },
   ]
 
