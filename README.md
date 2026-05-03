@@ -1,6 +1,6 @@
 # XATLAS: Global Threat Monitor & OSINT Platform
 
-> **Real-time cybersecurity situational awareness dashboard visualizing global threats, simulating live attack vectors, and providing actionable Open Source Intelligence (OSINT) tools.**
+> **Real-time cybersecurity situational awareness platform combining global threat visualization with practical OSINT and personal security tools.**
 
 ![Status](https://img.shields.io/badge/status-active-success)
 ![License](https://img.shields.io/badge/license-MIT-blue)
@@ -12,57 +12,108 @@
 
 ## 🚀 Project Overview
 
-**XATLAS** is a high-fidelity cyber threat intelligence platform designed for Security Operations Centers (SOCs) and analysts. It combines a photorealistic 3D globe visualization with real-time data simulation and practical security utilities.
+**XATLAS** is a cybersecurity intelligence platform that blends **global threat visibility** with **real-world security tools** for both analysts and everyday users.
 
-Unlike standard dashboards, XATLAS integrates:
-1.  **Live Threat Simulation**: Generates realistic cyber attack patterns (DDoS, APT, Ransomware) across 150+ global cities.
-2.  **OSINT Tool Suite**: Built-in utilities for password breach checking (via *Have I Been Pwned*) and safe DNS reconnaissance.
-3.  **Migration Intelligence**: A comprehensive database mapping 150+ proprietary enterprise tools to secure Open Source alternatives.
+Unlike traditional dashboards, XATLAS is built as a **hybrid system**:
+
+1. **Global Threat Visualization** — Interactive 3D globe displaying attack patterns and threat activity.
+2. **Real OSINT Tool Suite** — Practical utilities powered by real APIs and browser-level data.
+3. **User-Focused Security Tools** — Helps individuals analyze links, permissions, and digital exposure.
 
 ---
 
 ## 🛡️ Key Features
 
-### 🌐 Interactive 3D Globe
-- Powered by `react-globe.gl` and `Three.js`.
-- **Dynamic Layers**: Toggle visibility for Live Attacks, Secure Nodes, Infrastructure, Threat Hotspots, and Nuclear Sites.
-- **Real-Time Rendering**: Displays pulsing attack rings, infrastructure clusters, and historical data points.
-- **Interactive Tooltips**: Click any node to view detailed threat intelligence reports.
+### 🌐 Interactive Threat Globe
 
-### 🔐 Security Utilities
-- **Breach Checker**: Validates passwords against the *Have I Been Pwned* API using **SHA-1 K-Anonymity** (only hash prefixes are transmitted).
-- **Safe Recon Terminal**: Executes pre-approved DNS lookups safely without exposing the analyst's IP address.
-- **Alternative Finder**: Search for proprietary software (e.g., "Photoshop", "SolidWorks") to find vetted, secure open-source replacements with migration difficulty ratings.
+* Powered by `react-globe.gl` and `Three.js`
+* Real-time rendering of global attack patterns
+* Dynamic layers for attacks, hotspots, and infrastructure
+* Interactive nodes with contextual intelligence
+
+---
+
+### 🔐 Security & OSINT Tools
+
+* **URL Safety Checker**
+
+  * Scans links for reputation, HTTPS status, and redirects
+  * Integrates with real threat intelligence sources
+
+* **Digital Footprint Scanner**
+
+  * Displays IP info, ISP, and approximate geolocation
+  * Reveals browser-level exposure (cookies, storage, fingerprint basics)
+
+* **Permission Analyzer**
+
+  * Shows camera, microphone, location, and notification permissions
+  * Uses browser APIs to reflect real access states
+
+* **Public WiFi Risk Checker**
+
+  * Detects secure/insecure browsing context
+  * Warns about unsafe network conditions
+
+* **Password Breach Checker**
+
+  * Uses *Have I Been Pwned* with SHA-1 k-anonymity
+  * Passwords are never transmitted directly
+
+* **Safe Recon Terminal**
+
+  * Executes controlled DNS lookups securely
+
+* **Email Breach Checker**
+
+  * Checks email exposure against known breach datasets
+
+---
 
 ### 📊 Threat Intelligence Dashboard
-- **Live Statistics**: Real-time counters for total attacks, critical severity events, top targeted regions, and primary threat actors.
-- **Attack Vectors**: Visual breakdown of attack types (DDoS, SQL Injection, Phishing, etc.).
-- **Simulation Control**: Pause/Resume functionality for presentations and detailed analysis.
+
+* Live attack feed and categorized threat activity
+* Severity classification (Critical / High / Medium)
+* Region-based targeting insights
+* Pause/resume simulation for analysis and demos
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology |
-| :--- | :--- |
-| **Frontend** | React 18, Vite, CSS Modules, React Globe GL, Three.js |
-| **Backend** | Python 3.11, FastAPI, SQLAlchemy, Uvicorn |
-| **Database** | SQLite (with seeders for 150+ tools) |
-| **APIs** | Have I Been Pwned (v3), Socket (DNS Lookup) |
-| **Visualization** | Custom GeoJSON data, Pulsing Ring Animations |
+| Component         | Technology                                         |
+| :---------------- | :------------------------------------------------- |
+| **Frontend**      | React 18, Vite, CSS Modules, Three.js              |
+| **Backend**       | FastAPI, Python 3.11                               |
+| **Database**      | SQLite                                             |
+| **APIs**          | Have I Been Pwned, ThreatFox, IP Intelligence APIs |
+| **Visualization** | react-globe.gl, custom geo layers                  |
 
-🎯 Usage Guide
-Monitor Threats: Watch the globe for pulsing red/orange rings indicating live attacks.
-Analyze Layers: Use the left sidebar to toggle specific data layers (e.g., hide "Live Attacks" to see "Secure Nodes").
-Check Credentials: Use the Breach Checker in the bottom panel to verify password safety.
-Find Alternatives: Search for proprietary software (e.g., "Photoshop") to find vetted open-source replacements.
-Presentation Mode: Click "Pause Simulation" in the top right to freeze the map for screenshots or demos.
+---
 
-🔒 Security Note
-The Breach Checker uses k-anonymity; only the first 5 characters of the SHA-1 hash are sent to the API, ensuring your password is never exposed.
-The Recon Terminal restricts commands to safe DNS lookups only to prevent server-side execution attacks.
+## 🎯 Usage Guide
 
-🤝 Contributing
-Contributions are welcome! Please fork the repository and submit a pull request.
+* Monitor Threats: Observe live attack activity on the globe
+* Explore Tools: Use the Tools section for security analysis
+* Check Links: Verify suspicious URLs before opening them
+* Analyze Exposure: Understand what data your browser reveals
+* Audit Permissions: See what access websites currently have
+
+---
+
+## 🔒 Security Note
+
+* Password checks use **k-anonymity** — only hash prefixes are sent
+* No sensitive data is stored or logged
+* All tools rely on **real data sources or browser APIs**
+* No simulated security results are presented
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome. Fork the repository and submit a pull request.
+
+---
 
 Developed by @pranav-ggez on GitHub
